@@ -1,0 +1,26 @@
+{
+  "name": "d2items",
+  "version": "1.0.0",
+  "description": "API To Retrieve/Store D2 Item log information",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=development nodemon index.js"
+  },
+  "author": "David Fountain aka SavSin",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^7.17.0",
+    "sequelize": "^5.21.3"
+  },
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "morgan": "^1.9.1",
+    "nodemon": "^2.0.2"
+  }
+}
