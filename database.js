@@ -9,4 +9,16 @@ const sequelize = new Sequelize(stage.db_name, stage.db_user, stage.db_password,
     logging: false,
 });
 
-module.exports = sequelize;
+const UserModel = require('./models/user');
+const User = UserModel(sequelize, Sequelize);
+
+sequelize.sync({
+        force: false
+    })
+    .then(() => {
+        console.log('Successfully connected to Datbase!');
+    });
+
+module.exports = {
+    User
+}

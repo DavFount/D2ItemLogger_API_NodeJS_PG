@@ -16,22 +16,17 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-if(environment !== 'production') {
+if (environment !== 'production') {
     app.use(logger('dev'));
 }
 
-const routes = require('./routes/index.js');
-app.use('/api/v1', routes(router));
+const apiRoutes = require('./config/routes');
+app.use('/api/v1', apiRoutes);
 
 /* Database */
-const sequelize = require('./database');
-sequelize.authenticate()
-    .then( () => {
-        console.log('Connection has been established successfully.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database: ', err);
-    });
+const {
+    User
+} = require('./database');
 
 /* Server Setup */
 app.listen(`${stage.port}`, () => {
