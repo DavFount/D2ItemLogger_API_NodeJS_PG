@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const environment = process.env.NODE_ENV;
 const stage = require('../config')[environment];
 
+const Item = require('../database').Item;
+
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('user', {
         name: DataTypes.STRING,
@@ -17,5 +19,7 @@ module.exports = (sequelize, DataTypes) => {
                 throw new Error();
             });
     });
+
+    User.hasMany(Item);
     return User;
 };

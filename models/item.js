@@ -1,24 +1,20 @@
-const environment = process.env.NODE_ENV;
-const stage = require('./config')[environment];
-
 const Sequelize = require('sequelize');
-const Model = Sequelize.Model;
-class Item extends Model {}
-Item.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    password: DataTypes.STRING
-}, {
-    sequelize,
-    modelName: 'items',
-});
 
+const User = require('../database').User;
 
-module.exports = Item;
+module.exports = (sequelize, DataTypes) => {
+    const Item = sequelize.define('items', {
+        date: DataTypes.STRING,
+        time: DataTypes.STRING,
+        profile: DataTypes.STRING,
+        character: DataTypes.STRING,
+        difficulty: DataTypes.STRING,
+        area: DataTypes.STRING,
+        action: DataTypes.STRING,
+        itemName: DataTypes.STRING,
+        stats: Sequelize.ARRAY(DataTypes.STRING)
+    });
+
+    // Item.belongsTo(User);
+    return Item;
+};

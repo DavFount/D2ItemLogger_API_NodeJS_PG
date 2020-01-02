@@ -1,9 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const {
-    User
-} = require('../database');
+const User = require('../database').User;
 
 exports.list = (req, res) => {
     let result = {};

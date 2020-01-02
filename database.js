@@ -12,6 +12,9 @@ const sequelize = new Sequelize(stage.db_name, stage.db_user, stage.db_password,
 const UserModel = require('./models/user');
 const User = UserModel(sequelize, Sequelize);
 
+const ItemModel = require('./models/item');
+const Item = ItemModel(sequelize, Sequelize);
+
 sequelize.sync({
         force: false
     })
@@ -20,5 +23,6 @@ sequelize.sync({
     });
 
 module.exports = {
-    User
+    User,
+    Item
 }
