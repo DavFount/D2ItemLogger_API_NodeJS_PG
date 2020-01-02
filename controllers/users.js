@@ -1,13 +1,13 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const User = require('../database').User;
+const models = require('../database').models
 
 exports.list = (req, res) => {
     let result = {};
     let status = 200;
 
-    User.findAll({
+    models.User.findAll({
             hierarchy: true,
             attributes: ['id', 'name']
         })
@@ -38,7 +38,7 @@ exports.new = (req, res) => {
 
     const payload = req.decoded;
     if (payload && payload.user == 'david') {
-        User.create(req.body)
+        models.User.create(req.body)
             .then(user => {
                 result.status = status;
                 result.result = user;
@@ -67,7 +67,7 @@ exports.login = (req, res) => {
         password
     } = req.body;
 
-    User.findOne({
+    models.User.findOne({
             where: {
                 name: name
             }

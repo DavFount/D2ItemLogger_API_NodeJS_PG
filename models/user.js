@@ -2,13 +2,23 @@ const bcrypt = require('bcrypt');
 const environment = process.env.NODE_ENV;
 const stage = require('../config')[environment];
 
-const Item = require('../database').Item;
+// const Item = require('./item');
 
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('user', {
-        name: DataTypes.STRING,
+    const User = sequelize.define('User', {
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         password: DataTypes.STRING
-    }, {});
+    }, {
+        indexes: [
+            {
+                unique: true,
+                fields: ['name']
+            }
+        ],
+    });
 
     User.beforeCreate(user => {
         return bcrypt.hash(user.password, stage.saltingRounds)
@@ -20,6 +30,15 @@ module.exports = (sequelize, DataTypes) => {
             });
     });
 
-    User.hasMany(Item);
+    User.associate = (models) => {
+        models.User.hasMany(models.Item);
+    };
+
+    User.find = (name) => {
+        return User.findOne({
+            where: {name: name}
+        });
+    }
+
     return User;
 };

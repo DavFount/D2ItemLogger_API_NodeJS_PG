@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const User = require('../database').User;
 
 module.exports = (sequelize, DataTypes) => {
-    const Item = sequelize.define('items', {
+    const Item = sequelize.define('Item', {
         date: DataTypes.STRING,
         time: DataTypes.STRING,
         profile: DataTypes.STRING,
@@ -13,8 +13,16 @@ module.exports = (sequelize, DataTypes) => {
         action: DataTypes.STRING,
         itemName: DataTypes.STRING,
         stats: Sequelize.ARRAY(DataTypes.STRING)
-    });
+    }, {});
 
-    // Item.belongsTo(User);
+    Item.associate = (models) => {
+        models.Item.belongsTo(models.User, {
+            onDelete: "CASCADE",
+            foreignKey: {
+                allowNull: false
+            }
+        });
+    };
+
     return Item;
 };

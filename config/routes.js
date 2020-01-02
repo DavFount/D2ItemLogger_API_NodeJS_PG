@@ -8,10 +8,15 @@ router.get('/', (req, res) => {
     });
 });
 
-var userController = require('../controllers/users');
+let userController = require('../controllers/users');
+let itemController = require('../controllers/items');
 router.route('/users')
     .get(validateToken, userController.list)
     .post(validateToken, userController.new);
+
+router.route('/items')
+    .get(validateToken, itemController.list)
+    .post(validateToken, itemController.new);
 
 router.route('/login')
     .post(userController.login);
