@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize');
 
-const User = require('../database').User;
-
 module.exports = (sequelize, DataTypes) => {
     const Item = sequelize.define('Item', {
         date: DataTypes.STRING,

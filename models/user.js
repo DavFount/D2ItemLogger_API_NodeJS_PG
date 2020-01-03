@@ -2,8 +2,6 @@ const bcrypt = require('bcrypt');
 const environment = process.env.NODE_ENV;
 const stage = require('../config')[environment];
 
-// const Item = require('./item');
-
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         name: {
