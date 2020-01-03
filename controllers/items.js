@@ -6,23 +6,27 @@ exports.list = (req, res) => {
     const payload = req.decoded;
 
     if (payload) {
-        const loggedInUser = User.findAll({
-            where: {
-                name: payload.user
-            },
-            attributes: ['id']
-        });
-
-        models.Item.findAll({
-                where: {
-                    userId: loggedInUser.id
-                },
-                hierarchy: true
-            })
-            .then((results) => {
-                result.status = status;
-                result.result = results;
-                res.status(status).send(result);
+        models.User.find(payload.user)
+            .then(user => {
+                models.Item.getUserItems(user)
+                    .then(items => {
+                        if (items.length >= 1) {
+                            status = 200;
+                            result.status = status;
+                            res.status(status).send(items);
+                        } else {
+                            status = 200;
+                            result.status = status;
+                            result.result = 'No items found'
+                            res.status(status).send(result)
+                        }
+                    })
+                    .catch(err => {
+                        status = 500;
+                        result.status = status;
+                        result.error = err;
+                        res.status(status).send(result);
+                    })
             })
             .catch(err => {
                 status = 500;
@@ -43,37 +47,53 @@ exports.new = (req, res) => {
     let status = 200;
     const payload = req.decoded;
 
-    if(payload) {
-        const userPromise = models.User.find(payload.user)
-                .then()
-                .catch();
+    if (payload) {
+        models.User.find(payload.user)
+            .then(user => {
+                const {
+                    date,
+                    time,
+                    profile,
+                    character,
+                    difficulty,
+                    area,
+                    action,
+                    quality,
+                    itemName,
+                    stats
+                } = req.body;
 
-        const {
-            date,
-            time,
-            profile,
-            character,
-            difficulty,
-            area,
-            action,
-            quality,
-            itemName,
-            stats
-        } = req.body;
-
-        console.log(`Attempting to create new item: \n
-                    User: ${loggedInUser} UserId: ${loggedInUser} \n
-                    Date: ${date} Time: ${time} \n
-                    Profile: ${profile} Character: ${character} \n
-                    Difficulty: ${difficulty} Area: ${area} \n
-                    Action: ${action} Quality: ${quality} \n
-                    Item Name: ${itemName} Stats: \n
-                    ${stats.join('\n')}`);
-
-        // models.Item.create({
-        //     // Placeholder
-        // });
-        res.status(status).send('Check the logs');
+                models.Item.create({
+                        UserId: user.id,
+                        date: date,
+                        time: time,
+                        profile: profile,
+                        character: character,
+                        difficulty: difficulty,
+                        area: area,
+                        action: action,
+                        quality: quality,
+                        itemName: itemName,
+                        stats: stats
+                    })
+                    .then(item => {
+                        result.status = status;
+                        result.result = item;
+                        res.status(status).send(result);
+                    })
+                    .catch(err => {
+                        status = 500;
+                        result.status = status;
+                        result.error = err;
+                        res.status(status).send(result);
+                    });
+            })
+            .catch(err => {
+                status = 500;
+                result.status = status;
+                result.error = err;
+                res.status(stuats).send(result);
+            });
     } else {
         status = 401;
         result.status = status;

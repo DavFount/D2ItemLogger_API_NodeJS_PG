@@ -24,5 +24,13 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
+    Item.getUserItems = (user) => {
+        return Item.findAll({
+            where: {
+                UserId: user.id
+            }
+        });
+    };
+
     return Item;
 };
