@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
         area: DataTypes.STRING,
         action: DataTypes.STRING,
         itemName: DataTypes.STRING,
-        stats: Sequelize.ARRAY(DataTypes.STRING)
+        stats: Sequelize.ARRAY(DataTypes.STRING),
+        public: DataTypes.BOOLEAN,
     }, {});
 
     Item.associate = (models) => {
@@ -37,7 +38,23 @@ module.exports = (sequelize, DataTypes) => {
                 UserId: user.id
             }
         })
-    }
+    };
+
+    Item.getItem = (itemId) => {
+        return Item.findOne({
+            where: {
+                id: itemId
+            }
+        });
+    };
+
+    Item.getPublicItems = () => {
+        return Item.findAll({
+            where: {
+                public: true
+            }
+        });
+    };
 
     return Item;
 };
