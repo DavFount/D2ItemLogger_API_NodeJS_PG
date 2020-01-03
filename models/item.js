@@ -30,5 +30,14 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
+    Item.getUserItem = (user, itemId) => {
+        return Item.findOne({
+            where: {
+                id: itemId,
+                UserId: user.id
+            }
+        })
+    }
+
     return Item;
 };

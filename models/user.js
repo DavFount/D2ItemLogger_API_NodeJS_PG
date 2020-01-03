@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        password: DataTypes.STRING
+        password: {
+            type: DataTypes.STRING
+        }
     }, {
         indexes: [{
             unique: true,
@@ -17,13 +19,26 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.beforeCreate(user => {
-        return bcrypt.hash(user.password, stage.saltingRounds)
+        return bcrypt.hash(user.dataValues.password, stage.saltingRounds)
             .then(hash => {
-                user.password = hash;
+                user.dataValues.password = hash;
             })
             .catch(err => {
-                throw new Error();
+                throw new Error(err);
             });
+    });
+
+    User.beforeBulkUpdate(user => {
+        if (user.attributes.password) {
+            console.log('Changing Password');
+            return bcrypt.hash(user.attributes.password, stage.saltingRounds)
+                .then(hash => {
+                    user.attributes.password = hash;
+                })
+                .catch(err => {
+                    throw new Error(err);
+                });
+        }
     });
 
     User.associate = (models) => {
