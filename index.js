@@ -25,7 +25,7 @@ app.use('/api/v1', apiRoutes);
 
 /* Database */
 const {
-    User
+    models
 } = require('./database');
 
 /* Server Setup */

@@ -1,24 +1,61 @@
-const environment = process.env.NODE_ENV;
-const stage = require('./config')[environment];
-
 const Sequelize = require('sequelize');
-const Model = Sequelize.Model;
-class Item extends Model {}
-Item.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    password: DataTypes.STRING
-}, {
-    sequelize,
-    modelName: 'items',
-});
 
+module.exports = (sequelize, DataTypes) => {
+    const Item = sequelize.define('Item', {
+        date: DataTypes.STRING,
+        time: DataTypes.STRING,
+        profile: DataTypes.STRING,
+        character: DataTypes.STRING,
+        difficulty: DataTypes.STRING,
+        area: DataTypes.STRING,
+        action: DataTypes.STRING,
+        itemName: DataTypes.STRING,
+        stats: Sequelize.ARRAY(DataTypes.STRING),
+        public: DataTypes.BOOLEAN,
+    }, {});
 
-module.exports = Item;
+    Item.associate = (models) => {
+        models.Item.belongsTo(models.User, {
+            onDelete: "CASCADE",
+            foreignKey: {
+                allowNull: false
+            }
+        });
+    };
+
+    Item.getUserItems = (user) => {
+        return Item.findAll({
+            where: {
+                UserId: user.id
+            }
+        });
+    };
+
+    Item.getUserItem = (user, itemId) => {
+        return Item.findOne({
+            where: {
+                id: itemId,
+                UserId: user.id
+            }
+        })
+    };
+
+    Item.getItem = (itemId) => {
+        return Item.findOne({
+            where: {
+                id: itemId,
+                public: true
+            }
+        });
+    };
+
+    Item.getPublicItems = () => {
+        return Item.findAll({
+            where: {
+                public: true
+            }
+        });
+    };
+
+    return Item;
+};

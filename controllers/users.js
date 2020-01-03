@@ -1,15 +1,13 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const {
-    User
-} = require('../database');
+const models = require('../database').models
 
 exports.list = (req, res) => {
     let result = {};
     let status = 200;
 
-    User.findAll({
+    models.User.findAll({
             hierarchy: true,
             attributes: ['id', 'name']
         })
@@ -40,7 +38,7 @@ exports.new = (req, res) => {
 
     const payload = req.decoded;
     if (payload && payload.user == 'david') {
-        User.create(req.body)
+        models.User.create(req.body)
             .then(user => {
                 result.status = status;
                 result.result = user;
@@ -60,6 +58,73 @@ exports.new = (req, res) => {
     }
 };
 
+exports.show = (req, res) => {
+    let result = {};
+    let status = 200;
+
+    const payload = req.decoded;
+    if (payload && payload.user == 'david') {
+
+        models.User.findOne({
+                where: {
+                    id: req.params.id
+                },
+                attributes: ['id', 'name', 'createdAt', 'updatedAt']
+            })
+            .then(user => {
+                status = 200;
+                result.status = status;
+                result.result = user;
+                res.status(status).send(result);
+            })
+            .catch(err => {
+                status = 500;
+                result.status = status;
+                result.error = err;
+                res.status(status).send(result);
+            });
+    } else {
+        status = 401;
+        result.status = status;
+        result.error = 'Authentication Error';
+        res.status(status).send(result);
+    }
+}
+
+exports.update = (req, res) => {
+    let result = {};
+    let status = 201;
+
+    const payload = req.decoded;
+    if (payload && payload.user == 'david') {
+
+        models.User.update(req.body, {
+                where: {
+                    id: req.params.id
+                },
+                returning: true
+            })
+            .then(results => {
+                result.status = status;
+                result.numAffected = results[0];
+                result.result = results[1];
+                res.status(status).send(result);
+            })
+            .catch(err => {
+                status = 500;
+                result.status = status;
+                result.error = 'You\'re Landing here!';
+                res.status(status).send(result);
+            });
+
+    } else {
+        status = 401;
+        result.status = status;
+        result.error = 'Authentication Error';
+        res.status(status).send(result);
+    }
+};
+
 exports.login = (req, res) => {
     let result = {};
     let status = 201;
@@ -69,7 +134,7 @@ exports.login = (req, res) => {
         password
     } = req.body;
 
-    User.findOne({
+    models.User.findOne({
             where: {
                 name: name
             }
