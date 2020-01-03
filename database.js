@@ -24,7 +24,7 @@ fs
     });
 
 Object.keys(models).forEach(modelName => {
-    if(models[modelName].associate) {
+    if (models[modelName].associate) {
         models[modelName].associate(models);
     }
 });

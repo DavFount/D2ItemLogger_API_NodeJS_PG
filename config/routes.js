@@ -23,8 +23,12 @@ router.route('/items')
     .get(validateToken, itemController.list) // Working
     .post(validateToken, itemController.new); // Working
 
+router.route('/items/public')
+    .get(validateToken, itemController.public); // Working
+
 router.route('/items/:id')
-    .get(validateToken, itemController.show); // Working
+    .get(validateToken, itemController.show) // Working
+    .patch(validateToken, itemController.update); // Working
 
 router.route('/login')
     .post(userController.login); // Working
