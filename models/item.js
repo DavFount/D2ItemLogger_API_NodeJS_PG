@@ -43,7 +43,8 @@ module.exports = (sequelize, DataTypes) => {
     Item.getItem = (itemId) => {
         return Item.findOne({
             where: {
-                id: itemId
+                id: itemId,
+                public: true
             }
         });
     };
